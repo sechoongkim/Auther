@@ -5,7 +5,7 @@ var path = require('path');
 var User = require('../api/users/user.model.js');
 app.use(require('./logging.middleware'));
 
-app.use(require('./request-state.middleware'));
+
 
 app.use(require('./statics.middleware'));
 
@@ -47,6 +47,23 @@ app.post('/login', function (req, res, next) {
 });
 
 
+app.post('/signup', function (req, res, next) {
+ 
+  User.findOne({
+    where: req.body
+  })
+  .then(function (user) {
+    if (!user) {
+      res.sendStatus(401);
+
+    } else {
+      req.session.userId = user.id;
+      res.sendStatus(204);
+      // res.send(user);
+    }
+  })
+  .catch(next);
+});
 
 
 
@@ -69,6 +86,7 @@ validFrontendRoutes.forEach(function (stateRoute) {
   });
 });
 
+app.use(require('./request-state.middleware'));
 app.use(require('./error.middleware'));
 
 
