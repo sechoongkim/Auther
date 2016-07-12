@@ -1,5 +1,5 @@
 'use strict';
-
+//
 app.config(function ($stateProvider) {
   $stateProvider.state('story', {
     url: '/stories/:id',
