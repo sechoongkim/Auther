@@ -58,8 +58,8 @@ app.post('/signup', function (req, res, next) {
 
     } else {
       req.session.userId = user.id;
-      res.sendStatus(204);
-      // res.send(user);
+      // res.sendStatus(204);
+      res.send(user);
     }
   })
   .catch(next);
