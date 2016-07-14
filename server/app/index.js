@@ -5,9 +5,9 @@ var path = require('path');
 var User = require('../api/users/user.model.js');
 app.use(require('./logging.middleware'));
 
+app.use(require('./request-state.middleware'));
 
 
-app.use(require('./statics.middleware'));
 
 
 
@@ -29,42 +29,47 @@ app.use('/api', function (req, res, next) {
 });
 
 app.post('/login', function (req, res, next) {
- 
+  console.log("hiiii", req.body)
   User.findOne({
     where: req.body
   })
   .then(function (user) {
-    if (!user) {
-      res.sendStatus(401);
-
-    } else {
-      req.session.userId = user.id;
-      res.sendStatus(204);
+      if(user==null)
+        res.send(500)
+      else{
+        req.session.userId = user.id;
+        res.send(user)
+      }
+      
+     
       // res.send(user);
-    }
   })
-  .catch(next);
+  .catch(console.error)
+      
 });
 
 
 app.post('/signup', function (req, res, next) {
+  console.log("in the route")
  
-  User.findOne({
-    where: req.body
-  })
+  User.create(req.body )
   .then(function (user) {
-    if (!user) {
-      res.sendStatus(401);
-
-    } else {
+    console.log(user, "HIIII")
+    
       req.session.userId = user.id;
       // res.sendStatus(204);
       res.send(user);
-    }
+
   })
   .catch(next);
 });
 
+
+app.put('/logout', function(req,res,next){
+  
+
+   req.session.userId = null;
+})
 
 
 
@@ -86,7 +91,7 @@ validFrontendRoutes.forEach(function (stateRoute) {
   });
 });
 
-app.use(require('./request-state.middleware'));
+app.use(require('./statics.middleware'));
 app.use(require('./error.middleware'));
 
 

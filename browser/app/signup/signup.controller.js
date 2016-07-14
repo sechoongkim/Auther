@@ -1,16 +1,19 @@
-app.controller('signupCtrl', function($scope, $http, $state){
-	$scope.submitLogin=function(){
-		$http.post('/signup', {email:$scope.email, password:$scope.password })
+app.controller('signupCtrl', function($scope, AuthFactory, $state){
+	$scope.submitLogin=function(){//
+		console.log($scope.email, $scope.password);
+
+		AuthFactory.signup($scope.email, $scope.password)
 		.then(function(user) {
-			console.log(user);
-			// console.log(user.data);
-			if (user.data){
-				$state.go('stories')
-			}
+			console.log('test');
+			$state.go('stories')
+
+			
 		})
 		.catch(function(err){
+			console.log(err);
 			alert("no");
 		})
 	}
 
 })
+// 
